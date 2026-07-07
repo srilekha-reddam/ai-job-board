@@ -1,29 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type Props = {
   id: number;
 };
 
 export default function FavoriteButton({ id }: Props) {
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState(() => {
+    if (typeof window === "undefined") return false;
 
-  useEffect(() => {
-    const favorites = JSON.parse(
+    const favorites: number[] = JSON.parse(
       localStorage.getItem("favorites") || "[]"
     );
 
-    setSaved(favorites.includes(id));
-  }, [id]);
+    return favorites.includes(id);
+  });
 
   function toggleFavorite() {
-    let favorites = JSON.parse(
+    let favorites: number[] = JSON.parse(
       localStorage.getItem("favorites") || "[]"
     );
 
     if (favorites.includes(id)) {
-      favorites = favorites.filter((item: number) => item !== id);
+      favorites = favorites.filter((item) => item !== id);
       setSaved(false);
     } else {
       favorites.push(id);
